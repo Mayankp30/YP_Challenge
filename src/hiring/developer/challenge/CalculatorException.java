@@ -1,4 +1,4 @@
-package com.company;
+package hiring.developer.challenge;
 
 /**
  * Created by Mayank on 8/21/16.

@@ -1,34 +1,33 @@
-package com.company;
+package hiring.developer.challenge;
 
-import com.sun.tools.doclets.internal.toolkit.util.DocFinder;
-
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.EmptyStackException;
 import java.util.Scanner;
 import java.util.Stack;
 import java.util.regex.Pattern;
-import java.util.regex.Matcher;
+
 /**
  * Created by Mayank on 8/21/16.
  */
+
 public class Calculator {
 
-    private static final String[] precedence = {"/","*","+","-"};
+    private static final String[] PRECEDENCE = {"/","*","+","-"};
 
     private static Stack<String> operatorArray = new Stack<>();
     private static Stack<String> operandArray = new Stack<>();
 
+    //to check if the incoming operator has higher priority than the one at the top of the operatorArray stack
     public static boolean isHigherPriority(char c) {
-        if(operatorArray.empty() == true || Arrays.asList(precedence).indexOf(String.valueOf(c)) <  Arrays.asList(precedence).indexOf(operatorArray.peek())) {
+        if(operatorArray.empty() == true || Arrays.asList(PRECEDENCE).indexOf(String.valueOf(c)) <  Arrays.asList(PRECEDENCE).indexOf(operatorArray.peek())) {
             return true;
         }
         return false;
     }
 
+    //to pop two operands and one operator and perform calculation
     public static void pushAndPop() throws EmptyStackException, CalculatorException {
         int operand1 = Integer.parseInt(operandArray.pop());
         int operand2 = Integer.parseInt(operandArray.pop());
@@ -53,7 +52,6 @@ public class Calculator {
     public static Integer eval(String expression) throws CalculatorException{
         int begin = 0;
         for(int i =0;i<expression.length();i++) {
-
             if(expression.charAt(i) == '+' || expression.charAt(i) == '-' || expression.charAt(i) == '*' || expression.charAt(i) == '/') {
                 operandArray.push(expression.substring(begin,i));
                 if(i<expression.length()) begin = i+1;
@@ -63,7 +61,6 @@ public class Calculator {
                     pushAndPop();
                     operatorArray.push(String.valueOf(expression.charAt(i)));
                 }
-
             }
         }
 
@@ -74,7 +71,6 @@ public class Calculator {
                 pushAndPop();
             }
         }
-
         return Integer.parseInt(operandArray.pop());
     }
 
@@ -83,13 +79,14 @@ public class Calculator {
         String pattern = "([-+]?[0-9]*\\.?[0-9]+[\\/\\+\\-\\*])+([-+]?[0-9]*\\.?[0-9]+)";
         String pattern2 = "[0-9]+";
         Scanner scanner = new Scanner(inputStream);
+
         while((hasNext = scanner.hasNext()) != false ) {
             String expression = trimWhiteSpaces(scanner.nextLine());
             if(Pattern.matches(pattern, expression) || Pattern.matches(pattern2, expression)) {
                 try {
                     outputStream.println(eval(expression));
                 } catch(EmptyStackException es) {
-                    System.out.println("Invalid Expression. Incorrect number of arguments!");
+                    System.out.println("Invalid Expression");
                 } catch (CalculatorException e) {
                     e.printStackTrace();
                 }
@@ -99,6 +96,7 @@ public class Calculator {
         }
     }
 
+    //to trim whitespaces from input string
     private String trimWhiteSpaces(String expression) {
         return expression.replaceAll("\\s+","");
     }
