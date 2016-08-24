@@ -21,31 +21,43 @@ public class Calculator {
 
     //to check if the incoming operator has higher priority than the one at the top of the operatorArray stack
     public static boolean isHigherPriority(char c) {
-        if(operatorArray.empty() == true || Arrays.asList(PRECEDENCE).indexOf(String.valueOf(c)) <  Arrays.asList(PRECEDENCE).indexOf(operatorArray.peek())) {
+
+        if(operatorArray.empty() == true) {
             return true;
         }
+
+        if((c == '+' || c == '-') && Arrays.asList(PRECEDENCE).indexOf(String.valueOf(c)) >= 2) {
+            return false;
+        }
+
+        if(Arrays.asList(PRECEDENCE).indexOf(String.valueOf(c)) <=  Arrays.asList(PRECEDENCE).indexOf(operatorArray.peek())) {
+            return true;
+        }
+
         return false;
     }
 
     //to pop two operands and one operator and perform calculation
-    public static void pushAndPop() throws EmptyStackException, CalculatorException {
-        int operand1 = Integer.parseInt(operandArray.pop());
-        int operand2 = Integer.parseInt(operandArray.pop());
-        switch (operatorArray.pop()) {
-            case "+":
-                operandArray.push(String.valueOf(operand1 + operand2));
-                break;
-            case "-":
-                operandArray.push(String.valueOf(operand2 - operand1));
-                break;
-            case "*":
-                operandArray.push(String.valueOf(operand1 * operand2));
-                break;
-            case "/":
-                operandArray.push(String.valueOf(operand1 / operand2));
-                break;
-            default:
-                throw new CalculatorException("This calculator supports only basic arithmetic operations like +, -, *, /");
+    public static void pushAndPop(char incomingOperator) throws EmptyStackException, CalculatorException, NumberFormatException {
+        while(!isHigherPriority(incomingOperator)) {
+            int operand1 = Integer.parseInt(operandArray.pop());
+            int operand2 = Integer.parseInt(operandArray.pop());
+            switch (operatorArray.pop()) {
+                case "+":
+                    operandArray.push(String.valueOf(operand1 + operand2));
+                    break;
+                case "-":
+                    operandArray.push(String.valueOf(operand2 - operand1));
+                    break;
+                case "*":
+                    operandArray.push(String.valueOf(operand1 * operand2));
+                    break;
+                case "/":
+                    operandArray.push(String.valueOf(operand1 / operand2));
+                    break;
+                default:
+                    throw new CalculatorException("This calculator supports only basic arithmetic operations like +, -, *, /");
+            }
         }
     }
 
@@ -58,7 +70,7 @@ public class Calculator {
                 if(isHigherPriority(expression.charAt(i))) {
                     operatorArray.push(String.valueOf(expression.charAt(i)));
                 } else {
-                    pushAndPop();
+                    pushAndPop(expression.charAt(i));
                     operatorArray.push(String.valueOf(expression.charAt(i)));
                 }
             }
@@ -68,7 +80,7 @@ public class Calculator {
 
         if(operatorArray.empty() == false && operandArray.empty() == false) {
             while(operatorArray.empty() != true) {
-                pushAndPop();
+                pushAndPop(operatorArray.peek().charAt(0));
             }
         }
         return Integer.parseInt(operandArray.pop());
@@ -87,11 +99,19 @@ public class Calculator {
                     outputStream.println(eval(expression));
                 } catch(EmptyStackException es) {
                     System.out.println("Invalid Expression");
+                } catch(NumberFormatException ne) {
+                    System.out.println("Invalid Expression");
                 } catch (CalculatorException e) {
                     e.printStackTrace();
                 }
             } else {
                 System.out.println("Invalid Expression");
+            }//empty the stack after invalid expression
+            while(operatorArray.empty() == false) {
+                operatorArray.pop();
+            }
+            while(operandArray.empty() == false) {
+                operandArray.pop();
             }
         }
     }
