@@ -18,26 +18,6 @@ Task 2: SQL Query
 
 File - SQL_answer.txt and SQL_screenshot are the answer for challenge 2 - SQL Query. 
 
-
-Table "SalesOffices":
-+------------+-------------+
-| Field      | Type        |
-+------------+-------------+
-| OfficeID   | int(11)     |
-| OfficeName | varchar(50) |
-+------------+-------------+
-
-Table "SalesPeople":
-+---------------+-------------+
-| Field         | Type        |
-+---------------+-------------+
-| SalesPersonID | int(11)     |
-| FirstName     | varchar(50) |
-| LastName      | varchar(50) |
-| OfficeID      | int(11)     |
-| AnnualSales   | int(11)     |
-+---------------+-------------+
-
 SQL query will produce a list of the sales offices that have generated the highest sales. The query should display only offices whose total sales are at least $350,000. The output should show the office’s name, along with the office’s total sales. The list should be sorted in descending order by total sales - i.e., the highest-grossing office first, then the next highest, and so on.
 
 
